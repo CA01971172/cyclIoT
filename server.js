@@ -20,6 +20,11 @@ function getMessage(message) {// メッセージを受信したときに起動�
     //受け取ったデータをHTMLで表示する関数
     updateDiv(receivedData);
 
+    if(receivedData.type === "reset"){
+        //警告側デバイスが起動,接続してきたら一度HTML等を初期化する
+        reset();
+    }
+
     //電源を操作する
     controlPower(receivedData);
 
@@ -108,6 +113,6 @@ function lightUpLed(lightUpNumber){//LEDを点灯させる関数(引数に0を�
         property:lightUpNumber
     }
     channel.send(sendData);
-    messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
+    //messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
     ledDiv.innerText = JSON.stringify(sendData);
 }

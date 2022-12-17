@@ -11,7 +11,6 @@ const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
 let channel;
 let alertPort;//警告LED
-let isPowerOn = true;//電源が点いているかどうか
 let powerPort;//電源LED
 let buttonPort;//電源ボタン
 
@@ -41,7 +40,7 @@ async function connect(){
 
 	
 	powerPort.write(1);//電源LEDをオンにする
-	offLed();//警告LEDをオフにする
+	lightUpLed(0);//警告LEDをオフにする
 	const sendData = {
         process:"in",
         type:"reset",
@@ -54,31 +53,34 @@ async function connect(){
 }
 
 function controlLED(message){//LEDを操作する関数
-	if(message.data.type !== "sensor") console.log(JSON.stringify(message.data));
+	const receivedData = message.data;
+	//if(receivedData.type !== "sensor") console.log(JSON.stringify(receivedData));
     if(isPowerOn === false){
         //電源が入っていないなら、LED点灯処理をしない
         return
     }
-	const gottenProcess = message.data.process;
-	const gottenType = message.data.type;
-	const gottenProperty = message.data.property;
+	const gottenProcess = receivedData.process;
+	const gottenType = receivedData.type;
+	const gottenProperty = receivedData.property;
 	if((gottenProcess === "in")&&(gottenType === "led")){
-		if(gottenProperty === "on"){
-			onLed()
-		}else if(gottenProperty === "off"){
-			offLed()
-		}else{
-		}
+		lightUpLed(gottenProperty)
 	}
 }
 
-function onLed(){//ledをオフにする関数
-	npix.setGlobal(255, 0, 0);
-}
-function offLed(){//ledをオンにする関数
-	npix.setGlobal(0, 0, 0);
+function lightUpLed(lightUpNumber){//LEDを点灯させる関数(引数に0を受け取ると消灯する)
+	const color = {//光らせる色
+		red:255,
+		green:0,
+		blue:0
+	}
+	if(lightUpNumber >= 8){
+		npix.setGlobal(color.red, color.green, color.blue);
+	}else{
+		npix.setGlobal(0, 0, 0);
+	}
 }
 
+let isPowerOn = true;//電源が点いているかどうか
 function controlPower(ev){//電源状態を操作する関数
 	//console.log(!Boolean(ev.value));
     const sendData = {
@@ -88,18 +90,18 @@ function controlPower(ev){//電源状態を操作する関数
     };
     if (ev.value == 0){//ボタンが押されたとき
         if(isPowerOn === true){
-            powerPort.write(0);
-			offLed()
+            powerPort.write(0);//電源LEDを消灯する
+			lightUpLed(0)//警告LEDを消灯する
             isPowerOn = false;
 			sendData["property"] = "off"
             channel.send(sendData);
-			console.log(sendData)
+			console.log(JSON.stringify(sendData))
         }else{
-            powerPort.write(1);
+            powerPort.write(1);//電源LEDを点灯する
             isPowerOn = true;
 			sendData["property"] = "on"
             channel.send(sendData);
-			console.log(sendData)
+			console.log(JSON.stringify(sendData))
         }
     } else {//ボタンが離されたとき
     }
