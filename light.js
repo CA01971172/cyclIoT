@@ -41,7 +41,7 @@ function controlLED(message){
 	const gottenType = message.data.type;
 	const gottenProperty = message.data.property;
 	if((gottenProcess === "in")&&(gottenType === "led")){
-		if(gottenProperty === "on"){
+		if((gottenProperty === "on")&&(isPowerOn === true)){
 			alertPort.write(1);
 			//console.log("LED ON");
 		}else if(gottenProperty === "off"){
