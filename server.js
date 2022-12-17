@@ -62,7 +62,7 @@ function controlLed(objectData){
         //電源が入っていないなら、LED点灯処理をしない
         return
     }
-    const threshold = 500;//この値より下回る値を距離センサーが送信してきたらLEDを点灯させる
+    const threshold = 1000;//この値より下回る値を距離センサーが送信してきたらLEDを点灯させる
     //LEDを操作する
     let gottenProcess = "";
     let gottenType = "";
