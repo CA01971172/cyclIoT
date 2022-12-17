@@ -45,17 +45,19 @@ function controlPower(objectData){
             isPowerOn = true
         }else if(gottenProperty === "off"){
             isPowerOn = false
+            isLedOn = false;
         }else{
         }
     }
 }
 
+let isLedOn = false;
 function controlLed(objectData){
     if(isPowerOn === false){
         //電源が入っていないなら、LED点灯処理をしない
         return
     }
-    const threshold = 1000;//この値より下回る値を距離センサーが送信してきたらLEDを点灯させる
+    const threshold = 500;//この値より下回る値を距離センサーが送信してきたらLEDを点灯させる
     //LEDを操作する
     let gottenProcess = "";
     let gottenType = "";
@@ -69,15 +71,16 @@ function controlLed(objectData){
 
     if((gottenProcess === "out")&&(gottenType === "sensor")){
         if(gottenProperty < threshold){//物体が近づいてきているとき
-            OnLED()
+            if(isLedOn === false) OnLED()
         }else{
-            OffLED()
+            if(isLedOn === true) OffLED()
         }
     }
 }
 
 function OnLED() {
     // LED ON
+    isLedOn = true;
     const sendData = {
         process:"in",
         type:"led",
@@ -88,10 +91,12 @@ function OnLED() {
 }
 function OffLED() {
     // LED OFF
+    isLedOn = false;
     const sendData = {
         process:"in",
         type:"led",
         property:"off"
     }
+    channel.send(sendData);
     messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
 }

@@ -36,12 +36,16 @@ async function connect(){
 }
 
 function controlLED(message){
-	//console.log(JSON.stringify(message.data));
+	if(message.data.type !== "sensor") console.log(JSON.stringify(message.data));
+    if(isPowerOn === false){
+        //電源が入っていないなら、LED点灯処理をしない
+        return
+    }
 	const gottenProcess = message.data.process;
 	const gottenType = message.data.type;
 	const gottenProperty = message.data.property;
 	if((gottenProcess === "in")&&(gottenType === "led")){
-		if((gottenProperty === "on")&&(isPowerOn === true)){
+		if(gottenProperty === "on"){
 			alertPort.write(1);
 			//console.log("LED ON");
 		}else if(gottenProperty === "off"){
