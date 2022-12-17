@@ -14,27 +14,40 @@ window.onload = async function () {
     channel.onmessage = getMessage;
 };
 
-function getMessage(message) {
-    // メッセージを受信したときに起動する関数
-    if(message.data.type === "sensor"){
-        sensorDiv.innerText = JSON.stringify(message.data);
-    }else{
-        if(message.data.type === "power"){
-            powerDiv.innerText = JSON.stringify(message.data);
-        }
-        messageDiv.innerText += "\n" + "get: " + JSON.stringify(message.data);
-    }
+function getMessage(message) {// メッセージを受信したときに起動する関数
+    const receivedData=message.data;
+
+    //受け取ったデータをHTMLで表示する関数
+    updateDiv(receivedData);
 
     //電源を操作する
-    controlPower(message.data)
+    controlPower(receivedData);
 
     //LEDを操作する
-    controlLed(message.data)
+    controlLed(receivedData);
+}
+
+function reset(){//警告側デバイス接続時の初期化処理
+    messageDiv.innerText = "web socketリレーサービスに接続しました";
+    powerDiv.innerText = JSON.stringify({process:"in",type:"power",property:"on"});
+    ledDiv.innerText = JSON.stringify({process:"in",type:"power",property:0});
+    isPowerOn = true;
+    isLedOn = true;
+}
+
+function updateDiv(objectData){//受け取ったデータをHTMLで表示する関数
+    if(objectData.type === "sensor"){
+        sensorDiv.innerText = JSON.stringify(objectData);
+    }else{
+        if(objectData.type === "power"){
+            powerDiv.innerText = JSON.stringify(objectData);
+        }
+        messageDiv.innerText += "\n" + "get: " + JSON.stringify(objectData);
+    }
 }
 
 let isPowerOn = true;
-function controlPower(objectData){
-    //電源を操作する
+function controlPower(objectData){//電源を操作する関数
     let gottenProcess = "";
 	let gottenType = "";
 	let gottenProperty = "";
@@ -47,9 +60,9 @@ function controlPower(objectData){
 
     if((gottenProcess === "in")&&(gottenType === "power")){
         if(gottenProperty === "on"){
-            isPowerOn = true
+            isPowerOn = true;
         }else if(gottenProperty === "off"){
-            isPowerOn = false
+            isPowerOn = false;
             isLedOn = false;
         }else{
         }
@@ -57,12 +70,14 @@ function controlPower(objectData){
 }
 
 let isLedOn = false;
-function controlLed(objectData){
+const threshold = 1000; // この値より下回る値を距離センサーが送信してきたらLEDを全点灯させる
+const interval = 100; // この値ごとにLEDを点灯させる数を減少させる
+function controlLed(objectData){//LEDを操作する関数
     if(isPowerOn === false){
         //電源が入っていないなら、LED点灯処理をしない
         return
     }
-    const threshold = 1000;//この値より下回る値を距離センサーが送信してきたらLEDを点灯させる
+    
     //LEDを操作する
     let gottenProcess = "";
     let gottenType = "";
@@ -76,9 +91,9 @@ function controlLed(objectData){
 
     if((gottenProcess === "out")&&(gottenType === "sensor")){
         if(gottenProperty < threshold){//物体が近づいてきているとき
-            if(isLedOn === false) onLed()
+            if(isLedOn === false) onLed();
         }else{
-            if(isLedOn === true) offLed()
+            if(isLedOn === true) offLed();
         }
     }
 }

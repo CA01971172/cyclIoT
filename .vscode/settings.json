@@ -3,6 +3,9 @@
         "chirimen",
         "chirimentest",
         "cycl",
+        "GPIO",
+        "neopixel",
+        "npix",
         "reciever"
     ]
 }

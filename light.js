@@ -42,6 +42,12 @@ async function connect(){
 	
 	powerPort.write(1);//電源LEDをオンにする
 	offLed();//警告LEDをオフにする
+	const sendData = {
+        process:"in",
+        type:"reset",
+        property:""
+    };
+	channel.send(sendData);
 
 	channel.onmessage = controlLED;
     buttonPort.onchange = controlPower;
