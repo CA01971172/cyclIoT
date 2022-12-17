@@ -1,6 +1,8 @@
 // Remote Example4 - controller
 import { RelayServer } from "https://chirimen.org/remote-connection/js/beta/RelayServer.js";
 const sensorDiv = document.getElementById("sensorDiv");
+const powerDiv = document.getElementById("powerDiv");
+const ledDiv = document.getElementById("ledDiv");
 const messageDiv = document.getElementById("messageDiv");
 
 let channel;
@@ -17,6 +19,14 @@ function getMessage(message) {
     if(message.data.type === "sensor"){
         sensorDiv.innerText = JSON.stringify(message.data);
     }else{
+        switch(message.data.type){
+            case "power":
+                powerDiv.innerText = JSON.stringify(message.data);
+                break;
+            case "led":
+                ledDiv.innerText = JSON.stringify(message.data);
+                break;
+        }
         messageDiv.innerText += "\n" + "get: " + JSON.stringify(message.data);
     }
 
