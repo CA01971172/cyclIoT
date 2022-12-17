@@ -19,13 +19,8 @@ function getMessage(message) {
     if(message.data.type === "sensor"){
         sensorDiv.innerText = JSON.stringify(message.data);
     }else{
-        switch(message.data.type){
-            case "power":
-                powerDiv.innerText = JSON.stringify(message.data);
-                break;
-            case "led":
-                ledDiv.innerText = JSON.stringify(message.data);
-                break;
+        if(message.data.type === "power"){
+            powerDiv.innerText = JSON.stringify(message.data);
         }
         messageDiv.innerText += "\n" + "get: " + JSON.stringify(message.data);
     }
@@ -98,6 +93,7 @@ function onLed() {
     }
     channel.send(sendData);
     messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
+    ledDiv.innerText = JSON.stringify(message.data);
 }
 function offLed() {
     // LED OFF
@@ -109,4 +105,5 @@ function offLed() {
     }
     channel.send(sendData);
     messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
+    ledDiv.innerText = JSON.stringify(message.data);
 }
