@@ -73,11 +73,7 @@ function lightUpLed(lightUpNumber){//LEDを点灯させる関数(引数に0を�
 		green:0,
 		blue:0
 	}
-	if(lightUpNumber >= 8){
-		npix.setGlobal(color.red, color.green, color.blue);
-	}else{
-		npix.setGlobal(0, 0, 0);
-	}
+
 	const grbArray = new Array;
 	for ( let i = 0 ; i < neoPixels ; i++ ){
 		if(i < lightUpNumber){
@@ -90,6 +86,7 @@ function lightUpLed(lightUpNumber){//LEDを点灯させる関数(引数に0を�
 			grbArray.push(0);
 		}
 	}
+	
 	npix.setPixels(grbArray);
 }
 
