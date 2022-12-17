@@ -93,7 +93,7 @@ function onLed() {
     }
     channel.send(sendData);
     messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
-    ledDiv.innerText = JSON.stringify(message.data);
+    ledDiv.innerText = JSON.stringify(sendData);
 }
 function offLed() {
     // LED OFF
@@ -105,5 +105,5 @@ function offLed() {
     }
     channel.send(sendData);
     messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
-    ledDiv.innerText = JSON.stringify(message.data);
+    ledDiv.innerText = JSON.stringify(sendData);
 }
