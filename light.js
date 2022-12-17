@@ -15,8 +15,8 @@ let isPowerOn = true;//電源が点いているかどうか
 let powerPort;//電源LED
 let buttonPort;//電源ボタン
 
-let npix
-const neoPixels = 8 // LED個数
+let npix;
+const neoPixels = 8; // LED個数
 
 async function connect(){
 	// GPIOポート0の初期化

@@ -32,7 +32,6 @@ function reset(){//警告側デバイス接続時の初期化処理
     powerDiv.innerText = JSON.stringify({process:"in",type:"power",property:"on"});
     ledDiv.innerText = JSON.stringify({process:"in",type:"power",property:0});
     isPowerOn = true;
-    isLedOn = true;
 }
 
 function updateDiv(objectData){//受け取ったデータをHTMLで表示する関数
@@ -63,13 +62,12 @@ function controlPower(objectData){//電源を操作する関数
             isPowerOn = true;
         }else if(gottenProperty === "off"){
             isPowerOn = false;
-            isLedOn = false;
         }else{
         }
     }
 }
 
-let isLedOn = false;
+const neoPixels = 8; // LED個数
 const threshold = 1000; // この値より下回る値を距離センサーが送信してきたらLEDを全点灯させる
 const interval = 100; // この値ごとにLEDを点灯させる数を減少させる
 function controlLed(objectData){//LEDを操作する関数
@@ -90,33 +88,24 @@ function controlLed(objectData){//LEDを操作する関数
     }
 
     if((gottenProcess === "out")&&(gottenType === "sensor")){
-        if(gottenProperty < threshold){//物体が近づいてきているとき
-            if(isLedOn === false) onLed();
+        let lightUpNumber = 0; // LEDを点ける数
+        lightUpNumber = neoPixels - Math.floor((gottenProperty - threshold) / interval) // y=ax+b のような一次関数的に、距離に応じてLEDを点灯させる
+        //「0 ~ LEDの最大数」に収まるようにする
+        if(lightUpNumber > neoPixels){
+            lightUpNumber = neoPixels;
+        }else if(lightUpNumber < 0){
+            lightUpNumber = 0;
         }else{
-            if(isLedOn === true) offLed();
         }
+        lightUpLed(lightUpNumber)//LEDを点灯させる
     }
 }
 
-function onLed() {
-    // LED ON
-    isLedOn = true;
+function lightUpLed(lightUpNumber){//LEDを点灯させる関数(引数に0を受け取ると消灯する)
     const sendData = {
         process:"in",
         type:"led",
-        property:"on"
-    }
-    channel.send(sendData);
-    messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
-    ledDiv.innerText = JSON.stringify(sendData);
-}
-function offLed() {
-    // LED OFF
-    isLedOn = false;
-    const sendData = {
-        process:"in",
-        type:"led",
-        property:"off"
+        property:lightUpNumber
     }
     channel.send(sendData);
     messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
