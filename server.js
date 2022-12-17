@@ -71,14 +71,14 @@ function controlLed(objectData){
 
     if((gottenProcess === "out")&&(gottenType === "sensor")){
         if(gottenProperty < threshold){//物体が近づいてきているとき
-            if(isLedOn === false) OnLED()
+            if(isLedOn === false) onLed()
         }else{
-            if(isLedOn === true) OffLED()
+            if(isLedOn === true) offLed()
         }
     }
 }
 
-function OnLED() {
+function onLed() {
     // LED ON
     isLedOn = true;
     const sendData = {
@@ -89,7 +89,7 @@ function OnLED() {
     channel.send(sendData);
     messageDiv.innerText += "\n" + "post: " + JSON.stringify(sendData);
 }
-function OffLED() {
+function offLed() {
     // LED OFF
     isLedOn = false;
     const sendData = {
