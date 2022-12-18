@@ -73,7 +73,7 @@ function controlPower(objectData){//電源を操作する関数
 }
 
 const neoPixels = 8; // LED個数
-const threshold = 1000; // この値より下回る値を距離センサーが送信してきたらLEDを全点灯させる
+const threshold = 500; // この値より下回る値を距離センサーが送信してきたらLEDを全点灯させる
 const interval = 100; // この値ごとにLEDを点灯させる数を減少させる
 function controlLed(objectData){//LEDを操作する関数
     if(isPowerOn === false){
