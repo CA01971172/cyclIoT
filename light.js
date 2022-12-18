@@ -77,8 +77,8 @@ function lightUpLed(lightUpNumber){//LEDを点灯させる関数(引数に0を�
 	const grbArray = new Array;
 	for ( let i = 0 ; i < neoPixels ; i++ ){
 		if(i < lightUpNumber){
-			grbArray.push(color.red);
 			grbArray.push(color.green);
+			grbArray.push(color.red);
 			grbArray.push(color.blue);
 		}else{
 			grbArray.push(0);
