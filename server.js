@@ -42,6 +42,7 @@ function reset(){//警告側デバイス接続時の初期化処理
 function updateDiv(objectData){//受け取ったデータをHTMLで表示する関数
     if(objectData.type === "sensor"){
         sensorDiv.innerText = JSON.stringify(objectData);
+    }else if((objectData.process === "in")&&(objectData.type === "led")){
     }else{
         if(objectData.type === "power"){
             powerDiv.innerText = JSON.stringify(objectData);
