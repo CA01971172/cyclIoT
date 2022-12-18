@@ -33,7 +33,7 @@ function getMessage(message) {// メッセージを受信したときに起動�
 }
 
 function reset(){//警告側デバイス接続時の初期化処理
-    messageDiv.innerText = "web socketリレーサービスに接続しました";
+    messageDiv.innerText = "警告デバイスが接続されました";
     powerDiv.innerText = JSON.stringify({process:"in",type:"power",property:"on"});
     ledDiv.innerText = JSON.stringify({process:"in",type:"power",property:0});
     isPowerOn = true;
